@@ -9,6 +9,8 @@
 #include "../models/mediaprocessor.h"
 #include "../models/duplicatemanager.h"
 
+#include "../widgets/emptywidget.h"
+
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
@@ -17,23 +19,13 @@ public:
     ~MainWindow();
 
 private slots:
-    void onSelectDir();
-    void onDeleteFBtn();
-    void onDeleteSBtn();
-    void onIgnoreBtn();
+    void onDirSelect();
 
 private:
-    QPushButton* selectDirBtn;
-    QPushButton* deleteFDupBtn;
-    QPushButton* deleteSDupBtn;
-    QPushButton* ignoreDupBtn;
-    QPushButton* nextDupBtn;
-    QLabel* mediaFLabel;
-    QLabel* mediaSLabel;
     QStackedWidget* stackedWidget;
+    EmptyWidget* emptyWidget;
     MediaProcessor* mediaProcessor;
     DuplicateManager* duplicateManager;
     void updateUI();
-    void setupConnections();
 };
 #endif // MAINWINDOW_H
