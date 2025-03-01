@@ -43,6 +43,8 @@ else()
             video.h video.cpp
             hash.h hash.cpp
             .gitignore
+            image.h image.cpp
+            mediaprocessor.h mediaprocessor.cpp
 
         )
     endif()

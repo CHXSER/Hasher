@@ -1,4 +1,5 @@
 #include "hash.h"
+#include <algorithm>
 
 Hash::Hash(const cv::Mat& frame) {
     cv::Mat gray, resized, hash;
@@ -19,14 +20,18 @@ Hash::Hash(const cv::Mat& frame) {
     phash = std::move(shash);
 }
 
-std::string_view Hash::getPhash() const {
+Hash::Hash() {}
+
+std::string Hash::getPhash() const {
     return phash;
 }
 
-bool Hash::operator==(const Hash& other) const {
-    return other.phash == phash;
-}
-
-bool Hash::operator!=(const Hash& other) const {
-    return other.phash != phash;
+int Hash::hammingDistance(const Hash& other) const {
+    int distance = 0;
+    for (size_t i = 0; i < std::min(phash.size(), other.phash.size()); ++i) {
+        if (phash[i] != other.phash[i]) {
+            distance++;
+        }
+    }
+    return distance;
 }

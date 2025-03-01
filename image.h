@@ -1,19 +1,20 @@
-#ifndef VIDEO_H
-#define VIDEO_H
+#ifndef IMAGE_H
+#define IMAGE_H
 
 #include <string>
 #include <opencv2/opencv.hpp>
+
 #include "hash.h"
 
-class Video {
+class Image {
 public:
-    Video(const std::string&);
+    Image(const std::string&);
     std::string getFilePath() const;
     std::string getPhash() const;
 private:
     std::string fileName;
     Hash phash;
-    cv::Mat extractMiddleFrame() const;
+    cv::Mat loadImage() const;
 };
 
-#endif // VIDEO_H
+#endif // IMAGE_H

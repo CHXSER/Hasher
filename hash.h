@@ -2,16 +2,16 @@
 #define HASH_H
 
 #include <opencv2/opencv.hpp>
-#include <string_view>
+#include <string>
 
 class Hash {
 public:
     Hash(const cv::Mat&);
-    std::string_view getPhash() const;
-    bool operator==(const Hash&) const;
-    bool operator!=(const Hash&) const;
+    Hash();
+    std::string getPhash() const;
+    int hammingDistance(const Hash&) const;
 private:
-    std::string_view phash;
+    std::string phash;
 };
 
 #endif // HASH_H
