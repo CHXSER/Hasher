@@ -1,4 +1,5 @@
 #include "mediaprocessor.h"
+#include <filesystem>
 #include "video.h"
 #include "image.h"
 

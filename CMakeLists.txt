@@ -17,8 +17,8 @@ find_package(nlohmann_json REQUIRED)
 
 set(PROJECT_SOURCES
         main.cpp
-        mainwindow.cpp
-        mainwindow.h
+        windows/mainwindow.cpp
+        windows/mainwindow.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -40,11 +40,11 @@ else()
     else()
         add_executable(VideoAnalyzer
             ${PROJECT_SOURCES}
-            video.h video.cpp
-            hash.h hash.cpp
-            .gitignore
-            image.h image.cpp
-            mediaprocessor.h mediaprocessor.cpp
+            models/video.h models/video.cpp
+            models/hash.h models/hash.cpp
+            models/image.h models/image.cpp
+            models/mediaprocessor.h models/mediaprocessor.cpp
+            models/duplicatemanager.h models/duplicatemanager.cpp
 
         )
     endif()
