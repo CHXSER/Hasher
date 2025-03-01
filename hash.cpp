@@ -22,6 +22,8 @@ Hash::Hash(const cv::Mat& frame) {
 
 Hash::Hash() {}
 
+Hash::Hash(const std::string& hash) : phash(std::move(hash)) {}
+
 std::string Hash::getPhash() const {
     return phash;
 }

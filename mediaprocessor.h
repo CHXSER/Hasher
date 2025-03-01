@@ -18,6 +18,7 @@ private:
     std::unordered_map<std::string, std::string> mediaHashes;
     std::vector<std::pair<std::string, std::string>> duplicates;
     void findDuplicates(int hammingTreshold);
+    void calculateHashes();
 };
 
 #endif // MEDIAPROCESSOR_H

@@ -8,6 +8,7 @@ class Hash {
 public:
     Hash(const cv::Mat&);
     Hash();
+    Hash(const std::string&);
     std::string getPhash() const;
     int hammingDistance(const Hash&) const;
 private:
