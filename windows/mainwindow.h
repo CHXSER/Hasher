@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QPushButton>
 #include <QLabel>
+#include <QStackedWidget>
 
 #include "../models/mediaprocessor.h"
 #include "../models/duplicatemanager.h"
@@ -29,8 +30,10 @@ private:
     QPushButton* nextDupBtn;
     QLabel* mediaFLabel;
     QLabel* mediaSLabel;
+    QStackedWidget* stackedWidget;
     MediaProcessor* mediaProcessor;
     DuplicateManager* duplicateManager;
     void updateUI();
+    void setupConnections();
 };
 #endif // MAINWINDOW_H

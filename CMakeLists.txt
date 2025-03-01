@@ -45,6 +45,7 @@ else()
             models/image.h models/image.cpp
             models/mediaprocessor.h models/mediaprocessor.cpp
             models/duplicatemanager.h models/duplicatemanager.cpp
+            widgets/emptywidget.h widgets/emptywidget.cpp
 
         )
     endif()
