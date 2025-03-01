@@ -1,10 +1,10 @@
-#include "mainwindow.h"
+#include "windows/mainwindow.h"
 
 #include <QApplication>
 #include <opencv2/opencv.hpp>
 #include <nlohmann/json.hpp>
-#include "video.h"
-#include "image.h"
+#include "models/video.h"
+#include "models/image.h"
 #include <filesystem>
 #include <unordered_map>
 
