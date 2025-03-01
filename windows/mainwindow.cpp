@@ -5,17 +5,23 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent) {
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    QWidget* centralWidget = new QWidget(this);
+    setCentralWidget(centralWidget);
+
+    QVBoxLayout* mainLayout = new QVBoxLayout(centralWidget);
+
     stackedWidget = new QStackedWidget(this);
     emptyWidget = new EmptyWidget(this);
-
-    layout->addWidget(stackedWidget);
     stackedWidget->addWidget(emptyWidget);
     stackedWidget->setCurrentWidget(emptyWidget);
 
-    setCentralWidget(stackedWidget);
+    mainLayout->addWidget(stackedWidget);
+    mainLayout->setAlignment(Qt::AlignCenter);
+
+    connect(emptyWidget, &EmptyWidget::selectDirPressed, this, &MainWindow::onDirSelect);
 }
 
-void MainWindow::onDirSelect() {}
+void MainWindow::onDirSelect() {
+}
 
 MainWindow::~MainWindow() {}
