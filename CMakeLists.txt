@@ -9,8 +9,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets Multimedia MultimediaWidgets)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Multimedia MultimediaWidgets)
 
 find_package(OpenCV REQUIRED)
 find_package(nlohmann_json REQUIRED)
@@ -19,6 +19,18 @@ set(PROJECT_SOURCES
         main.cpp
         windows/mainwindow.cpp
         windows/mainwindow.h
+        widgets/emptywidget.h
+        widgets/emptywidget.cpp
+        widgets/comparisonwidget.h
+        widgets/comparisonwidget.cpp
+        models/mediaprocessor.h
+        models/mediaprocessor.cpp
+        models/video.h
+        models/video.cpp
+        models/hash.cpp
+        models/hash.h
+        models/image.cpp
+        models/image.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -45,13 +57,11 @@ else()
             models/image.h models/image.cpp
             models/mediaprocessor.h models/mediaprocessor.cpp
             models/duplicatemanager.h models/duplicatemanager.cpp
-            widgets/emptywidget.h widgets/emptywidget.cpp
-
         )
     endif()
 endif()
 
-target_link_libraries(VideoAnalyzer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(VideoAnalyzer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Multimedia Qt${QT_VERSION_MAJOR}::MultimediaWidgets)
 target_link_libraries(VideoAnalyzer PRIVATE ${OpenCV_LIBS})
 target_link_libraries(VideoAnalyzer PRIVATE nlohmann_json::nlohmann_json)
 

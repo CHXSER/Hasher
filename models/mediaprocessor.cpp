@@ -10,6 +10,11 @@ void MediaProcessor::processMediaFiles(int hammingTreshold) {
     findDuplicates(hammingTreshold);
 }
 
+std::vector<std::pair<std::string, std::string> > MediaProcessor::getDuplicates() const
+{
+    return duplicates;
+}
+
 void MediaProcessor::calculateHashes() {
     for (const auto& entry : std::filesystem::directory_iterator(directory)) {
         std::string filePath = entry.path().string();

@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "../models/mediaprocessor.h"
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -12,7 +13,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     stackedWidget = new QStackedWidget(this);
     emptyWidget = new EmptyWidget(this);
+    comparisonWidget = new ComparisonWidget(this);
     stackedWidget->addWidget(emptyWidget);
+    stackedWidget->addWidget(comparisonWidget);
     stackedWidget->setCurrentWidget(emptyWidget);
 
     mainLayout->addWidget(stackedWidget);
@@ -21,7 +24,16 @@ MainWindow::MainWindow(QWidget *parent)
     connect(emptyWidget, &EmptyWidget::selectDirPressed, this, &MainWindow::onDirSelect);
 }
 
-void MainWindow::onDirSelect() {
+void MainWindow::onDirSelect(const QString& dir) {
+    mediaProcessor = new MediaProcessor(dir.toStdString());
+    for (auto& [file1, file2] : mediaProcessor->getDuplicates()) {
+        qDebug() << "File1: " << file1;
+        qDebug() << "File2: " << file2;
+    }
+    stackedWidget->setCurrentWidget(comparisonWidget);
 }
 
-MainWindow::~MainWindow() {}
+MainWindow::~MainWindow() {
+    if (mediaProcessor) delete mediaProcessor;
+    if (duplicateManager) delete duplicateManager;
+}

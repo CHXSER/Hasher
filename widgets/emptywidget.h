@@ -11,7 +11,7 @@ class EmptyWidget : public QWidget {
 public:
     explicit EmptyWidget(QWidget *parent = nullptr);
 signals:
-    void selectDirPressed(const QString& dir);
+    void selectDirPressed(const QString&);
 private slots:
     void onDirBtnPressed();
 private:
