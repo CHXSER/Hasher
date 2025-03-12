@@ -57,6 +57,7 @@ private:
     QHBoxLayout* mediaLayout;
 
     void setCurrentMedia();
+    QPixmap colorSVG(const QString& path, const QColor& color);
 };
 
 #endif // COMPARISONWIDGET_H

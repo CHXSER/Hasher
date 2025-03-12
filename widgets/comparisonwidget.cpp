@@ -1,11 +1,25 @@
 #include "comparisonwidget.h"
 
 #include <QVBoxLayout>
+#include <QPainter>
+#include <QApplication>
 
 ComparisonWidget::ComparisonWidget(QWidget *parent)
     : QWidget(parent) {
+    // Setting icon color
+    QColor color = QApplication::palette().color(QPalette::Text);
+
+    QPixmap backwardPixmap = colorSVG("../../icons/backward.svg", color);
+    QPixmap forwardPixmap  = colorSVG("../../icons/forward.svg", color);
+    QPixmap xmarkPixmap    = colorSVG("../../icons/xmark.svg", color);
+    QPixmap playPixmap     = colorSVG("../../icons/play.svg", color);
+    QPixmap pausePixmap    = colorSVG("../../icons/pause.svg", color);
+    QPixmap repeatPixmap   = colorSVG("../../icons/repeat.svg", color);
+
     previousIconBtn = new QToolButton(this);
+    previousIconBtn->setIcon(QIcon(backwardPixmap));
     nextIconBtn = new QToolButton(this);
+    nextIconBtn->setIcon(QIcon(forwardPixmap));
     infoLabel = new QLabel(this);
 
     leftInfoLabel = new QLabel(this);
@@ -14,6 +28,7 @@ ComparisonWidget::ComparisonWidget(QWidget *parent)
     rightDeleteBtn = new QPushButton("Delete", this);
     ignoreBtn = new QPushButton("Ignore", this);
     cancelIconBtn = new QToolButton(this);
+    cancelIconBtn->setIcon(QIcon(xmarkPixmap));
 
     leftVideoWidget = new QVideoWidget(this);
     rightVideoWidget = new QVideoWidget(this);
@@ -22,8 +37,11 @@ ComparisonWidget::ComparisonWidget(QWidget *parent)
     leftPicLabel = new QLabel(this);
     rightPicLabel = new QLabel(this);
     playVideoIconBtn = new QToolButton(this);
+    playVideoIconBtn->setIcon(QIcon(playPixmap));
     pauseVideoIconBtn = new QToolButton(this);
+    pauseVideoIconBtn->setIcon(QIcon(pausePixmap));
     repeatVideoIconBtn = new QToolButton(this);
+    repeatVideoIconBtn->setIcon(QIcon(repeatPixmap));
 
     QVBoxLayout* mainLayout = new QVBoxLayout();
     QHBoxLayout* topLayout = new QHBoxLayout();
@@ -175,4 +193,13 @@ void ComparisonWidget::setCurrentMedia() {
     }
     leftInfoLabel->setText(fileInfo1.fileName() + ", Size: " + QString::number(fileInfo1.size()));
     rightInfoLabel->setText(fileInfo2.fileName() + ", Size: " + QString::number(fileInfo2.size()));
+}
+
+QPixmap ComparisonWidget::colorSVG(const QString& path, const QColor& color) {
+    QPixmap pixmap(path);
+    QPainter painter(&pixmap);
+    painter.setCompositionMode(QPainter::CompositionMode_SourceIn);
+    painter.fillRect(pixmap.rect(), color);
+    painter.end();
+    return pixmap;
 }
