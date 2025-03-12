@@ -11,6 +11,8 @@
 #include <QMediaPlayer>
 #include <QHBoxLayout>
 
+#include "videobar.h"
+
 class ComparisonWidget : public QWidget {
     Q_OBJECT
 public:
@@ -37,15 +39,17 @@ private:
     // Media if photo
     QLabel* leftPicLabel;
     QLabel* rightPicLabel;
-    QToolButton* playVideoIconBtn;
-    QToolButton* pauseVideoIconBtn;
-    QToolButton* repeatVideoIconBtn;
 
     // Media if video
     QVideoWidget* leftVideoWidget;
     QVideoWidget* rightVideoWidget;
     QMediaPlayer* leftMediaPlayer;
     QMediaPlayer* rightMediaPlayer;
+    QToolButton* playVideoIconBtn;
+    QToolButton* pauseVideoIconBtn;
+    QToolButton* repeatVideoIconBtn;
+    VideoBar* leftVideoBar;
+    VideoBar* rightVideoBar;
 
     QLabel* leftInfoLabel;
     QLabel* rightInfoLabel;

@@ -42,6 +42,8 @@ ComparisonWidget::ComparisonWidget(QWidget *parent)
     pauseVideoIconBtn->setIcon(QIcon(pausePixmap));
     repeatVideoIconBtn = new QToolButton(this);
     repeatVideoIconBtn->setIcon(QIcon(repeatPixmap));
+    leftVideoBar = new VideoBar(this);
+    rightVideoBar = new VideoBar(this);
 
     QVBoxLayout* mainLayout = new QVBoxLayout();
     QHBoxLayout* topLayout = new QHBoxLayout();
@@ -163,6 +165,22 @@ void ComparisonWidget::setCurrentMedia() {
         rightMediaPlayer->setSource(fileSecondUrl);
         rightMediaPlayer->setVideoOutput(rightVideoWidget);
 
+        connect(leftMediaPlayer, &QMediaPlayer::durationChanged, leftVideoBar, &VideoBar::setDuration);
+        connect(leftMediaPlayer, &QMediaPlayer::positionChanged, leftVideoBar, &VideoBar::updateProgress);
+        connect(leftVideoBar->getSlider(), &QSlider::sliderMoved, leftMediaPlayer, &QMediaPlayer::setPosition);
+
+        connect(rightMediaPlayer, &QMediaPlayer::durationChanged, rightVideoBar, &VideoBar::setDuration);
+        connect(rightMediaPlayer, &QMediaPlayer::positionChanged, rightVideoBar, &VideoBar::updateProgress);
+        connect(rightVideoBar->getSlider(), &QSlider::sliderMoved, rightMediaPlayer, &QMediaPlayer::setPosition);
+
+        auto leftVideoLayout = new QVBoxLayout();
+        leftVideoLayout->addWidget(leftVideoWidget);
+        leftVideoLayout->addWidget(leftVideoBar);
+
+        auto rightVideoLayout = new QVBoxLayout();
+        rightVideoLayout->addWidget(rightVideoWidget);
+        rightVideoLayout->addWidget(rightVideoBar);
+
         playVideoIconBtn->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         pauseVideoIconBtn->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         repeatVideoIconBtn->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -172,9 +190,9 @@ void ComparisonWidget::setCurrentMedia() {
         controlsLayout->addWidget(pauseVideoIconBtn);
         controlsLayout->addWidget(repeatVideoIconBtn);
 
-        mediaLayout->addWidget(leftVideoWidget, 1);
+        mediaLayout->addLayout(leftVideoLayout, 1);
         mediaLayout->addLayout(controlsLayout);
-        mediaLayout->addWidget(rightVideoWidget, 1);
+        mediaLayout->addLayout(rightVideoLayout, 1);
 
         //leftMediaPlayer->play();
         //rightMediaPlayer->play();
