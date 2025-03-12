@@ -21,6 +21,9 @@ ComparisonWidget::ComparisonWidget(QWidget *parent)
     rightMediaPlayer = new QMediaPlayer(this);
     leftPicLabel = new QLabel(this);
     rightPicLabel = new QLabel(this);
+    playVideoIconBtn = new QToolButton(this);
+    pauseVideoIconBtn = new QToolButton(this);
+    repeatVideoIconBtn = new QToolButton(this);
 
     QVBoxLayout* mainLayout = new QVBoxLayout();
     QHBoxLayout* topLayout = new QHBoxLayout();
@@ -63,6 +66,9 @@ ComparisonWidget::ComparisonWidget(QWidget *parent)
 
     connect(previousIconBtn, &QToolButton::triggered, this, &ComparisonWidget::onPreviousClicked);
     connect(nextIconBtn, &QToolButton::triggered, this, &ComparisonWidget::onNextClicked);
+    connect(playVideoIconBtn, &QToolButton::triggered, this, &ComparisonWidget::playVideo);
+    connect(pauseVideoIconBtn, &QToolButton::triggered, this, &ComparisonWidget::pauseVideo);
+    connect(repeatVideoIconBtn, &QToolButton::triggered, this, &ComparisonWidget::repeatVideo);
     connect(leftDeleteBtn, &QPushButton::clicked, this, &ComparisonWidget::onLeftDeleteClicked);
     connect(rightDeleteBtn, &QPushButton::clicked, this, &ComparisonWidget::onRightDeleteClicked);
     connect(ignoreBtn, &QPushButton::clicked, this, &ComparisonWidget::onIgnoreClicked);
@@ -102,6 +108,18 @@ void ComparisonWidget::onCancelClicked() {
     emit cancelComparison();
 }
 
+void ComparisonWidget::playVideo() {
+    qDebug() << "Play video clicked!";
+}
+
+void ComparisonWidget::pauseVideo() {
+    qDebug() << "Pause video clicked!";
+}
+
+void ComparisonWidget::repeatVideo() {
+    qDebug() << "Repeat video clicked!";
+}
+
 void ComparisonWidget::setCurrentMedia() {
     QFileInfo fileInfo1(QString::fromStdString(currentDuplicate.first));
     QFileInfo fileInfo2(QString::fromStdString(currentDuplicate.second));
@@ -127,12 +145,21 @@ void ComparisonWidget::setCurrentMedia() {
         rightMediaPlayer->setSource(fileSecondUrl);
         rightMediaPlayer->setVideoOutput(rightVideoWidget);
 
+        playVideoIconBtn->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        pauseVideoIconBtn->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        repeatVideoIconBtn->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+        QVBoxLayout* controlsLayout = new QVBoxLayout();
+        controlsLayout->addWidget(playVideoIconBtn);
+        controlsLayout->addWidget(pauseVideoIconBtn);
+        controlsLayout->addWidget(repeatVideoIconBtn);
+
         mediaLayout->addWidget(leftVideoWidget, 1);
-        mediaLayout->addSpacing(20);
+        mediaLayout->addLayout(controlsLayout);
         mediaLayout->addWidget(rightVideoWidget, 1);
 
-        leftMediaPlayer->play();
-        rightMediaPlayer->play();
+        //leftMediaPlayer->play();
+        //rightMediaPlayer->play();
 
     } else if ((extension1 == "jpg" || extension1 == "png" || extension1 == "jpeg") &&
         (extension2 == "jpg" || extension2 == "png" || extension2 == "jpeg")) {

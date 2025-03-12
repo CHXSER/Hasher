@@ -23,6 +23,9 @@ private slots:
     void onRightDeleteClicked();
     void onIgnoreClicked();
     void onCancelClicked();
+    void playVideo();
+    void pauseVideo();
+    void repeatVideo();
 signals:
     void cancelComparison();
 private:
@@ -34,6 +37,9 @@ private:
     // Media if photo
     QLabel* leftPicLabel;
     QLabel* rightPicLabel;
+    QToolButton* playVideoIconBtn;
+    QToolButton* pauseVideoIconBtn;
+    QToolButton* repeatVideoIconBtn;
 
     // Media if video
     QVideoWidget* leftVideoWidget;
