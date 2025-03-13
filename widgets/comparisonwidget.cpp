@@ -220,30 +220,31 @@ void ComparisonWidget::setCurrentMedia() {
         leftPicLabel->show();
         rightPicLabel->show();
 
-        // Change RAM limit for big images
-        // QImageReader::setAllocationLimit(1024);
-
-        //QPixmap leftPix(QString::fromStdString(currentDuplicate.first));
-        //QPixmap rightPix(QString::fromStdString(currentDuplicate.second));
-
         QImage leftPix(QString::fromStdString(currentDuplicate.first));
         QImage rightPix(QString::fromStdString(currentDuplicate.second));
 
-        leftPix = leftPix.scaled(2000, 2000, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-        rightPix = rightPix.scaled(2000, 2000, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        int maxHeight = this->height() / 2;
 
         leftPicLabel->setPixmap(QPixmap::fromImage(leftPix));
         rightPicLabel->setPixmap(QPixmap::fromImage(rightPix));
 
-        leftPicLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        rightPicLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        //leftPicLabel->setScaledContents(true);
+        //rightPicLabel->setScaledContents(true);
 
-        mediaLayout->addWidget(leftPicLabel);
+        auto* leftImageLayout = new QVBoxLayout();
+        leftImageLayout->addWidget(leftPicLabel);
+        leftImageLayout->addStretch();
+        auto* rightImageLayout = new QVBoxLayout();
+        rightImageLayout->addWidget(rightPicLabel);
+        rightImageLayout->addStretch();
+
+        mediaLayout->addLayout(leftImageLayout);
         mediaLayout->addStretch();
-        mediaLayout->addWidget(rightPicLabel);
+        mediaLayout->addLayout(rightImageLayout);
     }
     leftInfoLabel->setText(fileInfo1.fileName() + ", Size: " + QString::number(fileInfo1.size()));
     rightInfoLabel->setText(fileInfo2.fileName() + ", Size: " + QString::number(fileInfo2.size()));
+    update();
 }
 
 QPixmap ComparisonWidget::colorSVG(const QString& path, const QColor& color) {
