@@ -25,6 +25,8 @@ set(PROJECT_SOURCES
         widgets/comparisonwidget.cpp
         widgets/videobar.h
         widgets/videobar.cpp
+        widgets/loadingwidget.h
+        widgets/loadingwidget.cpp
         models/mediaprocessor.h
         models/mediaprocessor.cpp
         models/video.h

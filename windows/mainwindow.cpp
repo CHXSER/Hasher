@@ -14,7 +14,9 @@ MainWindow::MainWindow(QWidget *parent)
     stackedWidget = new QStackedWidget(this);
     emptyWidget = new EmptyWidget(this);
     comparisonWidget = new ComparisonWidget(this);
+    loadingWidget = new LoadingWidget(this);
     stackedWidget->addWidget(emptyWidget);
+    stackedWidget->addWidget(loadingWidget);
     stackedWidget->addWidget(comparisonWidget);
     stackedWidget->setCurrentWidget(emptyWidget);
 
@@ -28,14 +30,21 @@ void MainWindow::onDirSelect(const QString& dir) {
     if (dir.isEmpty()) {
         return;
     }
+    stackedWidget->setCurrentWidget(loadingWidget);
+    loadingWidget->setDirectory(dir);
+
     mediaProcessor = new MediaProcessor(dir.toStdString());
-    for (auto& [file1, file2] : mediaProcessor->getDuplicates()) {
-        qDebug() << "File1: " << file1;
-        qDebug() << "File2: " << file2;
-    }
-    std::pair<std::string, std::string> dup = mediaProcessor->getDuplicates().at(0);
-    comparisonWidget->setCurrentDuplicate(dup);
-    stackedWidget->setCurrentWidget(comparisonWidget);
+
+    connect(mediaProcessor, &MediaProcessor::progressUpdated,
+        loadingWidget, &LoadingWidget::updateProgress);
+
+    connect(mediaProcessor, &MediaProcessor::processingFinished, this, [this]() {
+        std::pair<std::string, std::string> dup = mediaProcessor->getDuplicates().at(0);
+        comparisonWidget->setCurrentDuplicate(dup);
+        stackedWidget->setCurrentWidget(comparisonWidget);
+    });
+
+    mediaProcessor->startProcessing();
 }
 
 MainWindow::~MainWindow() {}

@@ -3,13 +3,26 @@
 #include "video.h"
 #include "image.h"
 
-MediaProcessor::MediaProcessor(const std::string& dir) : directory(std::move(dir)) {
-    processMediaFiles();
+#include <QThread>
+
+MediaProcessor::MediaProcessor(const std::string& dir) : directory(std::move(dir)) {}
+
+void MediaProcessor::startProcessing(int hammingTreshold) {
+    QThread* thread = new QThread();
+    this->moveToThread(thread);
+
+    connect(thread, &QThread::started, this, &MediaProcessor::processMediaFiles);
+    connect(this, &MediaProcessor::processingFinished, thread, &QThread::quit);
+    connect(this, &MediaProcessor::processingFinished, this, &MediaProcessor::deleteLater);
+    connect(thread, &QThread::finished, thread, &QThread::deleteLater);
+
+    thread->start();
 }
 
-void MediaProcessor::processMediaFiles(int hammingTreshold) {
+void MediaProcessor::processMediaFiles() {
     calculateHashes();
-    findDuplicates(hammingTreshold);
+    findDuplicates();
+    emit processingFinished();
 }
 
 std::vector<std::pair<std::string, std::string> > MediaProcessor::getDuplicates() const
@@ -18,6 +31,10 @@ std::vector<std::pair<std::string, std::string> > MediaProcessor::getDuplicates(
 }
 
 void MediaProcessor::calculateHashes() {
+    int totalFiles = std::distance(std::filesystem::directory_iterator(directory),
+                                   std::filesystem::directory_iterator{});
+    int processedFiles = 0;
+
     for (const auto& entry : std::filesystem::directory_iterator(directory)) {
         std::string filePath = entry.path().string();
         if (filePath.find(".mp4") != std::string::npos ||
@@ -31,6 +48,9 @@ void MediaProcessor::calculateHashes() {
             Image image(filePath);
             mediaHashes[filePath] = image.getPhash();
         }
+
+        processedFiles++;
+        emit progressUpdated(processedFiles, totalFiles);
     }
 }
 

@@ -7,11 +7,12 @@
 #include <QStackedWidget>
 #include <QString>
 
-#include "../models/mediaprocessor.h"
 #include "../models/duplicatemanager.h"
+#include "../models/mediaprocessor.h"
 
 #include "../widgets/emptywidget.h"
 #include "../widgets/comparisonwidget.h"
+#include "../widgets/loadingwidget.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -27,8 +28,9 @@ private:
     QStackedWidget* stackedWidget;
     EmptyWidget* emptyWidget;
     ComparisonWidget* comparisonWidget;
-    MediaProcessor* mediaProcessor;
+    LoadingWidget* loadingWidget;
     DuplicateManager* duplicateManager;
+    MediaProcessor* mediaProcessor;
     void updateUI();
 };
 #endif // MAINWINDOW_H
