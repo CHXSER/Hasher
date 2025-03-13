@@ -3,6 +3,7 @@
 #include <QVBoxLayout>
 #include <QPainter>
 #include <QApplication>
+#include <QImageReader>
 
 ComparisonWidget::ComparisonWidget(QWidget *parent)
     : QWidget(parent) {
@@ -157,6 +158,18 @@ void ComparisonWidget::setCurrentMedia() {
     if ((extension1 == "mp4" || extension1 == "webm" || extension1 == "gif") &&
         (extension2 == "mp4" || extension2 == "webm" || extension2 == "gif") ) {
 
+        // Hide images
+        leftPicLabel->hide();
+        rightPicLabel->hide();
+        // Show video
+        leftVideoWidget->show();
+        rightVideoWidget->show();
+        playVideoIconBtn->show();
+        pauseVideoIconBtn->show();
+        repeatVideoIconBtn->show();
+        leftVideoBar->show();
+        rightVideoBar->show();
+
         leftVideoWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         rightVideoWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
@@ -193,21 +206,41 @@ void ComparisonWidget::setCurrentMedia() {
         mediaLayout->addLayout(leftVideoLayout, 1);
         mediaLayout->addLayout(controlsLayout);
         mediaLayout->addLayout(rightVideoLayout, 1);
-
-        //leftMediaPlayer->play();
-        //rightMediaPlayer->play();
-
     } else if ((extension1 == "jpg" || extension1 == "png" || extension1 == "jpeg") &&
         (extension2 == "jpg" || extension2 == "png" || extension2 == "jpeg")) {
-            QPixmap leftPix(QString::fromStdString(currentDuplicate.first));
-            QPixmap rightPix(QString::fromStdString(currentDuplicate.second));
+        // Hide videos
+        leftVideoWidget->hide();
+        rightVideoWidget->hide();
+        playVideoIconBtn->hide();
+        pauseVideoIconBtn->hide();
+        repeatVideoIconBtn->hide();
+        leftVideoBar->hide();
+        rightVideoBar->hide();
+        // Show images
+        leftPicLabel->show();
+        rightPicLabel->show();
 
-            leftPicLabel->setPixmap(leftPix);
-            rightPicLabel->setPixmap(rightPix);
+        // Change RAM limit for big images
+        // QImageReader::setAllocationLimit(1024);
 
-            mediaLayout->addWidget(leftPicLabel);
-            mediaLayout->addStretch();
-            mediaLayout->addWidget(rightPicLabel);
+        //QPixmap leftPix(QString::fromStdString(currentDuplicate.first));
+        //QPixmap rightPix(QString::fromStdString(currentDuplicate.second));
+
+        QImage leftPix(QString::fromStdString(currentDuplicate.first));
+        QImage rightPix(QString::fromStdString(currentDuplicate.second));
+
+        leftPix = leftPix.scaled(2000, 2000, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        rightPix = rightPix.scaled(2000, 2000, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+        leftPicLabel->setPixmap(QPixmap::fromImage(leftPix));
+        rightPicLabel->setPixmap(QPixmap::fromImage(rightPix));
+
+        leftPicLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        rightPicLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+        mediaLayout->addWidget(leftPicLabel);
+        mediaLayout->addStretch();
+        mediaLayout->addWidget(rightPicLabel);
     }
     leftInfoLabel->setText(fileInfo1.fileName() + ", Size: " + QString::number(fileInfo1.size()));
     rightInfoLabel->setText(fileInfo2.fileName() + ", Size: " + QString::number(fileInfo2.size()));
