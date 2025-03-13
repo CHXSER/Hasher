@@ -18,6 +18,7 @@ class ComparisonWidget : public QWidget {
 public:
     explicit ComparisonWidget(QWidget* parent = nullptr);
     void setCurrentDuplicate(const std::pair<std::string, std::string>& dup);
+    void setDupLabel(int current, int max);
 private slots:
     void onPreviousClicked();
     void onNextClicked();
@@ -29,9 +30,12 @@ private slots:
     void pauseVideo();
     void repeatVideo();
 signals:
+    void previousComparison();
+    void nextComparison();
     void cancelComparison();
 private:
     QToolButton* previousIconBtn;
+    QLabel* infoNumberLabel;
     QToolButton* nextIconBtn;
     QLabel* infoLabel;
     std::pair<std::string, std::string> currentDuplicate;

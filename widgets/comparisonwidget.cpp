@@ -19,6 +19,7 @@ ComparisonWidget::ComparisonWidget(QWidget *parent)
 
     previousIconBtn = new QToolButton(this);
     previousIconBtn->setIcon(QIcon(backwardPixmap));
+    infoNumberLabel = new QLabel(this);
     nextIconBtn = new QToolButton(this);
     nextIconBtn->setIcon(QIcon(forwardPixmap));
     infoLabel = new QLabel(this);
@@ -60,6 +61,8 @@ ComparisonWidget::ComparisonWidget(QWidget *parent)
 
     topLayout->addWidget(previousIconBtn);
     topLayout->addStretch();
+    topLayout->addWidget(infoNumberLabel);
+    topLayout->addStretch();
     topLayout->addWidget(nextIconBtn);
     topWidget->setLayout(topLayout);
 
@@ -85,15 +88,15 @@ ComparisonWidget::ComparisonWidget(QWidget *parent)
     mainLayout->addWidget(btnWidget2);
     setLayout(mainLayout);
 
-    connect(previousIconBtn, &QToolButton::triggered, this, &ComparisonWidget::onPreviousClicked);
-    connect(nextIconBtn, &QToolButton::triggered, this, &ComparisonWidget::onNextClicked);
-    connect(playVideoIconBtn, &QToolButton::triggered, this, &ComparisonWidget::playVideo);
-    connect(pauseVideoIconBtn, &QToolButton::triggered, this, &ComparisonWidget::pauseVideo);
-    connect(repeatVideoIconBtn, &QToolButton::triggered, this, &ComparisonWidget::repeatVideo);
+    connect(previousIconBtn, &QToolButton::clicked, this, &ComparisonWidget::onPreviousClicked);
+    connect(nextIconBtn, &QToolButton::clicked, this, &ComparisonWidget::onNextClicked);
+    connect(playVideoIconBtn, &QToolButton::clicked, this, &ComparisonWidget::playVideo);
+    connect(pauseVideoIconBtn, &QToolButton::clicked, this, &ComparisonWidget::pauseVideo);
+    connect(repeatVideoIconBtn, &QToolButton::clicked, this, &ComparisonWidget::repeatVideo);
     connect(leftDeleteBtn, &QPushButton::clicked, this, &ComparisonWidget::onLeftDeleteClicked);
     connect(rightDeleteBtn, &QPushButton::clicked, this, &ComparisonWidget::onRightDeleteClicked);
     connect(ignoreBtn, &QPushButton::clicked, this, &ComparisonWidget::onIgnoreClicked);
-    connect(cancelIconBtn, &QToolButton::triggered, this, &ComparisonWidget::onCancelClicked);
+    connect(cancelIconBtn, &QToolButton::clicked, this, &ComparisonWidget::onCancelClicked);
 }
 
 void ComparisonWidget::setCurrentDuplicate(const std::pair<std::string, std::string>& dup) {
@@ -101,28 +104,28 @@ void ComparisonWidget::setCurrentDuplicate(const std::pair<std::string, std::str
     setCurrentMedia();
 }
 
+void ComparisonWidget::setDupLabel(int current, int max) {
+    infoNumberLabel->setText("Duplicate n " + QString::number(current) + " out of " + QString::number(max));
+}
+
 void ComparisonWidget::onPreviousClicked() {
+    emit previousComparison();
+}
+
+void ComparisonWidget::onNextClicked() {
+    emit nextComparison();
+}
+
+void ComparisonWidget::onLeftDeleteClicked() {
 
 }
 
-void ComparisonWidget::onNextClicked()
-{
+void ComparisonWidget::onRightDeleteClicked() {
 
 }
 
-void ComparisonWidget::onLeftDeleteClicked()
-{
-
-}
-
-void ComparisonWidget::onRightDeleteClicked()
-{
-
-}
-
-void ComparisonWidget::onIgnoreClicked()
-{
-
+void ComparisonWidget::onIgnoreClicked() {
+    onNextClicked();
 }
 
 void ComparisonWidget::onCancelClicked() {
@@ -130,15 +133,20 @@ void ComparisonWidget::onCancelClicked() {
 }
 
 void ComparisonWidget::playVideo() {
-    qDebug() << "Play video clicked!";
+    leftMediaPlayer->play();
+    rightMediaPlayer->play();
 }
 
 void ComparisonWidget::pauseVideo() {
-    qDebug() << "Pause video clicked!";
+    leftMediaPlayer->pause();
+    rightMediaPlayer->pause();
 }
 
 void ComparisonWidget::repeatVideo() {
-    qDebug() << "Repeat video clicked!";
+    leftMediaPlayer->setPosition(0);
+    rightMediaPlayer->setPosition(0);
+    leftMediaPlayer->play();
+    rightMediaPlayer->play();
 }
 
 void ComparisonWidget::setCurrentMedia() {
@@ -223,13 +231,9 @@ void ComparisonWidget::setCurrentMedia() {
         QImage leftPix(QString::fromStdString(currentDuplicate.first));
         QImage rightPix(QString::fromStdString(currentDuplicate.second));
 
-        int maxHeight = this->height() / 2;
 
         leftPicLabel->setPixmap(QPixmap::fromImage(leftPix));
         rightPicLabel->setPixmap(QPixmap::fromImage(rightPix));
-
-        //leftPicLabel->setScaledContents(true);
-        //rightPicLabel->setScaledContents(true);
 
         auto* leftImageLayout = new QVBoxLayout();
         leftImageLayout->addWidget(leftPicLabel);

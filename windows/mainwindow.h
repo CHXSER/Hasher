@@ -24,7 +24,6 @@ public:
 
 private slots:
     void onDirSelect(const QString& dir);
-
 private:
     QStackedWidget* stackedWidget;
     EmptyWidget* emptyWidget;
@@ -32,6 +31,8 @@ private:
     LoadingWidget* loadingWidget;
     DuplicateManager* duplicateManager;
     std::unique_ptr<MediaProcessor> mediaProcessor;
+    std::vector<std::pair<std::string, std::string>> duplicates;
+    int currentDupIndex;
     void updateUI();
 };
 #endif // MAINWINDOW_H

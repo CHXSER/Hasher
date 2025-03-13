@@ -39,17 +39,36 @@ void MainWindow::onDirSelect(const QString& dir) {
         loadingWidget, &LoadingWidget::updateProgress);
 
     connect(mediaProcessor.get(), &MediaProcessor::processingFinished, this, [this]() {
-        auto dups = mediaProcessor->getDuplicates();
-        if (dups.empty()) {
+        duplicates = mediaProcessor->getDuplicates();
+        currentDupIndex = 0;
+        if (duplicates.empty()) {
             stackedWidget->setCurrentWidget(emptyWidget);
             return;
         }
-        auto dup = dups.at(0);
-        comparisonWidget->setCurrentDuplicate(dup);
+        comparisonWidget->setCurrentDuplicate(duplicates[currentDupIndex]);
+        comparisonWidget->setDupLabel(currentDupIndex+1, duplicates.size());
         stackedWidget->setCurrentWidget(comparisonWidget);
     });
 
     mediaProcessor->startProcessing();
+
+    connect(comparisonWidget, &ComparisonWidget::nextComparison, this, [this]() {
+        if(currentDupIndex + 1 < duplicates.size()) {
+            currentDupIndex++;
+            comparisonWidget->setCurrentDuplicate(duplicates[currentDupIndex]);
+            comparisonWidget->setDupLabel(currentDupIndex+1, duplicates.size());
+        } else {
+            // Create the widget for confirming the changes
+        }
+    });
+
+    connect(comparisonWidget, &ComparisonWidget::previousComparison, this, [this]() {
+        if(!currentDupIndex - 1 < 0) {
+            currentDupIndex--;
+            comparisonWidget->setCurrentDuplicate(duplicates[currentDupIndex]);
+            comparisonWidget->setDupLabel(currentDupIndex+1, duplicates.size());
+        }
+    });
 }
 
 MainWindow::~MainWindow() {}
