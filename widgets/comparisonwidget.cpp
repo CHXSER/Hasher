@@ -117,15 +117,18 @@ void ComparisonWidget::onNextClicked() {
 }
 
 void ComparisonWidget::onLeftDeleteClicked() {
-
+    onNextClicked();
+    emit queueToDelete(QString::fromStdString(currentDuplicate.first));
 }
 
 void ComparisonWidget::onRightDeleteClicked() {
-
+    onNextClicked();
+    emit queueToDelete(QString::fromStdString(currentDuplicate.second));
 }
 
 void ComparisonWidget::onIgnoreClicked() {
     onNextClicked();
+    emit queueToIgnore(currentDuplicate);
 }
 
 void ComparisonWidget::onCancelClicked() {
@@ -214,6 +217,9 @@ void ComparisonWidget::setCurrentMedia() {
         mediaLayout->addLayout(leftVideoLayout, 1);
         mediaLayout->addLayout(controlsLayout);
         mediaLayout->addLayout(rightVideoLayout, 1);
+
+        leftMediaPlayer->play();
+        rightMediaPlayer->play();
     } else if ((extension1 == "jpg" || extension1 == "png" || extension1 == "jpeg") &&
         (extension2 == "jpg" || extension2 == "png" || extension2 == "jpeg")) {
         // Hide videos
@@ -248,7 +254,6 @@ void ComparisonWidget::setCurrentMedia() {
     }
     leftInfoLabel->setText(fileInfo1.fileName() + ", Size: " + QString::number(fileInfo1.size()));
     rightInfoLabel->setText(fileInfo2.fileName() + ", Size: " + QString::number(fileInfo2.size()));
-    update();
 }
 
 QPixmap ComparisonWidget::colorSVG(const QString& path, const QColor& color) {

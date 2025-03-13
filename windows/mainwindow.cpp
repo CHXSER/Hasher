@@ -15,15 +15,19 @@ MainWindow::MainWindow(QWidget *parent)
     emptyWidget = new EmptyWidget(this);
     comparisonWidget = new ComparisonWidget(this);
     loadingWidget = new LoadingWidget(this);
+    summaryWidget = new SummaryWidget(this);
     stackedWidget->addWidget(emptyWidget);
     stackedWidget->addWidget(loadingWidget);
     stackedWidget->addWidget(comparisonWidget);
+    stackedWidget->addWidget(summaryWidget);
     stackedWidget->setCurrentWidget(emptyWidget);
 
     mainLayout->addWidget(stackedWidget);
     mainLayout->setAlignment(Qt::AlignCenter);
 
     connect(emptyWidget, &EmptyWidget::selectDirPressed, this, &MainWindow::onDirSelect);
+    connect(comparisonWidget, &ComparisonWidget::queueToDelete, this, &MainWindow::onQueueDelete);
+    connect(comparisonWidget, &ComparisonWidget::queueToIgnore, this, &MainWindow::onQueueIgnore);
 }
 
 void MainWindow::onDirSelect(const QString& dir) {
@@ -59,6 +63,9 @@ void MainWindow::onDirSelect(const QString& dir) {
             comparisonWidget->setDupLabel(currentDupIndex+1, duplicates.size());
         } else {
             // Create the widget for confirming the changes
+            summaryWidget->setDeleteList(filesToDelete);
+            summaryWidget->setIgnoreList(pairsToIgnore);
+            stackedWidget->setCurrentWidget(summaryWidget);
         }
     });
 
@@ -69,6 +76,14 @@ void MainWindow::onDirSelect(const QString& dir) {
             comparisonWidget->setDupLabel(currentDupIndex+1, duplicates.size());
         }
     });
+}
+
+void MainWindow::onQueueDelete(const QString &filePath) {
+    filesToDelete.push_back(filePath);
+}
+
+void MainWindow::onQueueIgnore(const std::pair<std::string, std::string>& dup) {
+    pairsToIgnore.push_back(dup);
 }
 
 MainWindow::~MainWindow() {}

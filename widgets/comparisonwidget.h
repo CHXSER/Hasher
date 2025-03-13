@@ -33,6 +33,8 @@ signals:
     void previousComparison();
     void nextComparison();
     void cancelComparison();
+    void queueToDelete(const QString& filePath);
+    void queueToIgnore(const std::pair<std::string, std::string>& files);
 private:
     QToolButton* previousIconBtn;
     QLabel* infoNumberLabel;
