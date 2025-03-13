@@ -6,8 +6,6 @@ LoadingWidget::LoadingWidget(QWidget *parent)
     analyzingLabel = new QLabel("Analyzing: ", this);
     analyzingLabel->setAlignment(Qt::AlignCenter);
     progressBar = new QProgressBar(this);
-    percentageLabel = new QLabel("0%", this);
-    percentageLabel->setAlignment(Qt::AlignCenter);
 
     progressTextLabel = new QLabel("0 out of 0", this);
     progressTextLabel->setAlignment(Qt::AlignCenter);
@@ -28,7 +26,6 @@ LoadingWidget::LoadingWidget(QWidget *parent)
     progressLayout->setAlignment(Qt::AlignCenter);
 
     progressLayout->addWidget(progressBar);
-    progressLayout->addWidget(percentageLabel);
 
     mainLayout->addLayout(progressLayout);
     mainLayout->addWidget(progressTextLabel);
@@ -45,6 +42,5 @@ void LoadingWidget::updateProgress(int processed, int total) {
     int progress = static_cast<int>((processed / static_cast<float>(total)) * 100);
 
     progressBar->setValue(progress);
-    percentageLabel->setText(QString::number(progress) + "%");
     progressTextLabel->setText(QString::number(processed) + " out of " + QString::number(total));
 }

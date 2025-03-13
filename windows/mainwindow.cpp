@@ -33,13 +33,18 @@ void MainWindow::onDirSelect(const QString& dir) {
     stackedWidget->setCurrentWidget(loadingWidget);
     loadingWidget->setDirectory(dir);
 
-    mediaProcessor = new MediaProcessor(dir.toStdString());
+    mediaProcessor = std::make_unique<MediaProcessor>(dir.toStdString());
 
-    connect(mediaProcessor, &MediaProcessor::progressUpdated,
+    connect(mediaProcessor.get(), &MediaProcessor::progressUpdated,
         loadingWidget, &LoadingWidget::updateProgress);
 
-    connect(mediaProcessor, &MediaProcessor::processingFinished, this, [this]() {
-        std::pair<std::string, std::string> dup = mediaProcessor->getDuplicates().at(0);
+    connect(mediaProcessor.get(), &MediaProcessor::processingFinished, this, [this]() {
+        auto dups = mediaProcessor->getDuplicates();
+        if (dups.empty()) {
+            stackedWidget->setCurrentWidget(emptyWidget);
+            return;
+        }
+        auto dup = dups.at(0);
         comparisonWidget->setCurrentDuplicate(dup);
         stackedWidget->setCurrentWidget(comparisonWidget);
     });

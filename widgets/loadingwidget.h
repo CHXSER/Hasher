@@ -17,7 +17,6 @@ public:
 private:
     QLabel* analyzingLabel;
     QProgressBar* progressBar;
-    QLabel* percentageLabel;
     QLabel* progressTextLabel;
 };
 

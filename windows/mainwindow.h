@@ -6,6 +6,7 @@
 #include <QLabel>
 #include <QStackedWidget>
 #include <QString>
+#include <memory>
 
 #include "../models/duplicatemanager.h"
 #include "../models/mediaprocessor.h"
@@ -30,7 +31,7 @@ private:
     ComparisonWidget* comparisonWidget;
     LoadingWidget* loadingWidget;
     DuplicateManager* duplicateManager;
-    MediaProcessor* mediaProcessor;
+    std::unique_ptr<MediaProcessor> mediaProcessor;
     void updateUI();
 };
 #endif // MAINWINDOW_H

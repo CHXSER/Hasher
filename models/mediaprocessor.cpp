@@ -13,7 +13,6 @@ void MediaProcessor::startProcessing(int hammingTreshold) {
 
     connect(thread, &QThread::started, this, &MediaProcessor::processMediaFiles);
     connect(this, &MediaProcessor::processingFinished, thread, &QThread::quit);
-    connect(this, &MediaProcessor::processingFinished, this, &MediaProcessor::deleteLater);
     connect(thread, &QThread::finished, thread, &QThread::deleteLater);
 
     thread->start();
@@ -25,7 +24,7 @@ void MediaProcessor::processMediaFiles() {
     emit processingFinished();
 }
 
-std::vector<std::pair<std::string, std::string> > MediaProcessor::getDuplicates() const
+std::vector<std::pair<std::string, std::string>> MediaProcessor::getDuplicates() const
 {
     return duplicates;
 }
@@ -37,16 +36,19 @@ void MediaProcessor::calculateHashes() {
 
     for (const auto& entry : std::filesystem::directory_iterator(directory)) {
         std::string filePath = entry.path().string();
-        if (filePath.find(".mp4") != std::string::npos ||
-            filePath.find(".webm") != std::string::npos ||
-            filePath.find(".gif") != std::string::npos) {
-            Video video(filePath);
-            mediaHashes[filePath] = video.getPhash();
-        } else if (filePath.find(".png") != std::string::npos ||
-                   filePath.find(".jpg") != std::string::npos ||
-                   filePath.find(".jpeg") != std::string::npos) {
-            Image image(filePath);
-            mediaHashes[filePath] = image.getPhash();
+
+        if (!filePath.empty()) {
+            if (filePath.find(".mp4") != std::string::npos ||
+                filePath.find(".webm") != std::string::npos ||
+                filePath.find(".gif") != std::string::npos) {
+                Video video(filePath);
+                mediaHashes[filePath] = video.getPhash();
+            } else if (filePath.find(".png") != std::string::npos ||
+                       filePath.find(".jpg") != std::string::npos ||
+                       filePath.find(".jpeg") != std::string::npos) {
+                Image image(filePath);
+                mediaHashes[filePath] = image.getPhash();
+            }
         }
 
         processedFiles++;
@@ -60,7 +62,7 @@ void MediaProcessor::findDuplicates(int hammingThreshold) {
             Hash hash1(it1->second);
             Hash hash2(it2->second);
             if (hash1.hammingDistance(hash2) <= hammingThreshold) {
-                duplicates.push_back({it1->first, it2->first});
+                duplicates.push_back({std::string(it1->first), std::string(it2->first)});
             }
         }
     }
