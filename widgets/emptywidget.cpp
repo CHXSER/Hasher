@@ -1,5 +1,7 @@
 #include "emptywidget.h"
 #include <QFileDialog>
+#include <QDir>
+#include <QStandardPaths>
 
 EmptyWidget::EmptyWidget(QWidget *parent)
     : QWidget{parent} {
@@ -17,11 +19,12 @@ EmptyWidget::EmptyWidget(QWidget *parent)
 }
 
 void EmptyWidget::onDirBtnPressed() {
+    QString defaultDir = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
     QString dir = QFileDialog::getExistingDirectory(
         this,
         tr("Open directory"),
-        "/home",
-        QFileDialog::ShowDirsOnly
+        defaultDir,
+        QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks
     );
     emit selectDirPressed(dir);
 }
