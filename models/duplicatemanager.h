@@ -9,14 +9,10 @@ class DuplicateManager {
 public:
     DuplicateManager(
         const std::vector<std::pair<std::string, std::string>>&);
-    void showNextDuplicate();
-    void deleteFile(const std::string& filePath);
-    void ignoreDuplicate(std::pair<std::string, std::string>& duplicates);
-    std::pair<std::string, std::string> getCurrentDuplicate() const;
+    void saveToDatabase();
+    std::vector<std::pair<std::string, std::string>> readFromDatabase();
 private:
     std::vector<std::pair<std::string, std::string>> duplicates;
-    std::vector<std::pair<std::string, std::string>> ignoreDuplicates;
-    size_t currentIndex;
 };
 
 #endif // DUPLICATEMANAGER_H

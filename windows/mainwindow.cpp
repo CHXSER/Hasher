@@ -62,7 +62,6 @@ void MainWindow::onDirSelect(const QString& dir) {
             comparisonWidget->setCurrentDuplicate(duplicates[currentDupIndex]);
             comparisonWidget->setDupLabel(currentDupIndex+1, duplicates.size());
         } else {
-            // Create the widget for confirming the changes
             summaryWidget->setDeleteList(filesToDelete);
             summaryWidget->setIgnoreList(pairsToIgnore);
             stackedWidget->setCurrentWidget(summaryWidget);
@@ -84,6 +83,14 @@ void MainWindow::onQueueDelete(const QString &filePath) {
 
 void MainWindow::onQueueIgnore(const std::pair<std::string, std::string>& dup) {
     pairsToIgnore.push_back(dup);
+}
+
+void MainWindow::onCancel() {
+    stackedWidget->setCurrentWidget(emptyWidget);
+}
+
+void MainWindow::onComplete() {
+    // Delete the files and set the ignore on the db file
 }
 
 MainWindow::~MainWindow() {}

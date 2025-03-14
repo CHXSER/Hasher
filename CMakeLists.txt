@@ -31,6 +31,8 @@ set(PROJECT_SOURCES
         widgets/summarywidget.cpp
         models/mediaprocessor.h
         models/mediaprocessor.cpp
+        models/duplicatemanager.h
+        models/duplicatemanager.cpp
         models/video.h
         models/video.cpp
         models/hash.cpp

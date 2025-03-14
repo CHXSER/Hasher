@@ -27,6 +27,8 @@ private slots:
     void onDirSelect(const QString& dir);
     void onQueueDelete(const QString& filePath);
     void onQueueIgnore(const std::pair<std::string, std::string>& dup);
+    void onComplete();
+    void onCancel();
 private:
     QStackedWidget* stackedWidget;
     EmptyWidget* emptyWidget;
